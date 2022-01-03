@@ -3,7 +3,6 @@ const path = require("path");
 const fsPromises = require("fs").promises;
 // const { promises: fsPromises } = require("fs");
 
-
 const multer = require("multer");
 const util = require("util");
 const imagemin = require("imagemin");
@@ -67,7 +66,6 @@ const minifyImage = async (req, res, next) => {
     console.log("filename111111: ", filename);
     console.log("tmpPath111111: ", tmpPath);
 
-
     const MINIFY_DIR = "public/images";
 
     await imagemin([tmpPath.replace(/\\/g, "/")], {
@@ -80,9 +78,22 @@ const minifyImage = async (req, res, next) => {
           quality: [0.6, 0.8],
         }),
         imageminSvgo({
-          plugins: extendDefaultPlugins([
-            { name: "removeViewBox", active: false },
-          ]),
+          // plugins: extendDefaultPlugins([
+          //   { name: "removeViewBox", active: false },
+          // ]),
+          plugins: [
+            "preset-default",
+            // or
+            {
+              name: "preset-default",
+              floatPrecision: 4,
+              overrides: {
+                convertPathData: {
+                  applyTransforms: false,
+                },
+              },
+            },
+          ],
         }),
       ],
     });
@@ -96,7 +107,7 @@ const minifyImage = async (req, res, next) => {
     };
 
     console.log("req.file222222: ", req.file);
-    
+
     next();
   } catch (error) {
     next(error);
