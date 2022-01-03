@@ -6,7 +6,7 @@ const useradminModel = require("../useradmins/useradminModel");
 const jwt = require("jsonwebtoken");
 const { v4: uuidv4 } = require("uuid");
 
-// const sgMail = require("@sendgrid/mail");
+const sgMail = require("@sendgrid/mail");
 const nodemailer = require("nodemailer");
 
 const { UnauthorizedError } = require("../errors/errors");
@@ -181,18 +181,20 @@ const sendVerificationEmail = async (useradmin) => {
       verificationToken
     );
 
-    const transporter = nodemailer.createTransport({
-      service: "gmail",
+    await sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+
+    // const transporter = nodemailer.createTransport({
+    //   service: "gmail",
       // host: "smtp.ethereal.email",
       // port: 587,
-      auth: {
-        user: process.env.NODEMAILER_USER,
-        pass: process.env.NODEMAILER_PASS,
-      },
-      tls: {
-        rejectUnauthorized: false,
-      },
-    });
+    //   auth: {
+    //     user: process.env.NODEMAILER_USER,
+    //     pass: process.env.NODEMAILER_PASS,
+    //   },
+    //   tls: {
+    //     rejectUnauthorized: false,
+    //   },
+    // });
 
     const mailOptions = {
       from: process.env.NODEMAILER_USER, // "sender@email.com" - sender address // от кого
@@ -203,20 +205,31 @@ const sendVerificationEmail = async (useradmin) => {
       html: `<div><h2>Привіт друже!</h2><h3>Ласкаво просимо до адміністративної частини сайту.</h3><p>Ви можете підтвердити Вашу електронну пошту за посиланням: <a href='${process.env.SITE_DOMAIN_LOCAL}/auth/verify/${verificationToken}'>Натисніть тут</a> 👍 !!!</p></div>`,
     };
 
-    async function main() {
-      const result = await transporter.sendMail(
-        mailOptions,
-        function (err, info) {
-          if (err) {
-            console.log("err1111", err);
-          } else {
-            console.log("info", info);
-          }
-        }
-      );
-      console.log("Email sent successfully!", { result });
-    }
-    main();
+    // await sgMail.send(mailOptions);
+
+    sgMail
+      .send(mailOptions)
+      .then(() => {
+        console.log("Email sent successfully!!!!!");
+      })
+      .catch((error) => {
+        console.error("error:", error);
+      });
+
+    // async function main() {
+    //   const result = await transporter.sendMail(
+    //     mailOptions,
+    //     function (err, info) {
+    //       if (err) {
+    //         console.log("err1111", err);
+    //       } else {
+    //         console.log("info", info);
+    //       }
+    //     }
+    //   );
+    //   console.log("Email sent successfully!", { result });
+    // }
+    // main();
   } catch (err) {
     console.log(err);
   }
