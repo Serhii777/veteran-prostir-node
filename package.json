@@ -9,7 +9,7 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon api/server.js"
+    "start": "node api/server.js"
   },
   "repository": {
     "type": "git",
@@ -41,8 +41,5 @@
     "nodemailer": "^6.7.2",
     "sharp": "^0.29.3",
     "uuid": "^8.3.2"
-  },
-  "devDependencies": {
-    "nodemon": "^2.0.15"
   }
 }
