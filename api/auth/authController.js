@@ -12,10 +12,11 @@ const nodemailer = require("nodemailer");
 const { UnauthorizedError } = require("../errors/errors");
 
 const listAccessEmail = [
-  "serhii.muzyka2918@gmail.com",
-  "serhiimuzyka29@gmail./com",
-  "muzykasv72@gmail.com",
-  "veteransspace01@gmail.com",
+  process.env.ACCESS_EMAIL_MSV1,
+  process.env.ACCESS_EMAIL_MSV2,
+  process.env.ACCESS_EMAIL_VP,
+  process.env.ACCESS_EMAIL_KOF,
+  process.env.ACCESS_EMAIL_VPM,
 ];
 
 //! Registration ================================
@@ -33,7 +34,9 @@ const signUp = async (req, res, next) => {
 
   const passwordHash = await bcryptjs.hash(password, 6);
 
-  const allowEmail = listAccessEmail.filter((item) => item === req.body.email);
+  const allowEmail = listAccessEmail.filter(
+    (item) => (console.log("item:", item), item === req.body.email)
+  );
 
   console.log("allowEmail11111:", allowEmail[0]);
 
@@ -82,6 +85,8 @@ const signIn = async (req, res, next) => {
         // `Useradmin with email ${email} doesn't exist! You need to register to access the site administration!`
         `Користувача з емейлом ${email} не існує. Щоб отримати доступ до адміністрування сайту, вам потрібно зареєструватися.`
       );
+
+      // return res.status(400).send({message: `Користувача з емейлом ${email} не існує. Щоб отримати доступ до адміністрування сайту, вам потрібно зареєструватися.`})
     } else {
       const useradmin = await useradminModel.findUserByEmail(email);
 
@@ -183,18 +188,18 @@ const sendVerificationEmail = async (useradmin) => {
 
     await sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
-    // const transporter = nodemailer.createTransport({
-    //   service: "gmail",
-      // host: "smtp.ethereal.email",
-      // port: 587,
-    //   auth: {
-    //     user: process.env.NODEMAILER_USER,
-    //     pass: process.env.NODEMAILER_PASS,
-    //   },
-    //   tls: {
-    //     rejectUnauthorized: false,
-    //   },
-    // });
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+    // host: "smtp.ethereal.email",
+    // port: 587,
+      auth: {
+        user: process.env.NODEMAILER_USER,
+        pass: process.env.NODEMAILER_PASS,
+      },
+      tls: {
+        rejectUnauthorized: false,
+      },
+    });
 
     const mailOptions = {
       from: process.env.NODEMAILER_USER, // "sender@email.com" - sender address // от кого
@@ -205,31 +210,33 @@ const sendVerificationEmail = async (useradmin) => {
       html: `<div><h2>Привіт друже!</h2><h3>Ласкаво просимо до адміністративної частини сайту.</h3><p>Ви можете підтвердити Вашу електронну пошту за посиланням: <a href='${process.env.SITE_DOMAIN_LOCAL}/auth/verify/${verificationToken}'>Натисніть тут</a> 👍 !!!</p></div>`,
     };
 
+    console.log('mailOptions:', mailOptions);
+
     // await sgMail.send(mailOptions);
 
-    sgMail
-      .send(mailOptions)
-      .then(() => {
-        console.log("Email sent successfully!!!!!");
-      })
-      .catch((error) => {
-        console.error("error:", error);
-      });
+    // sgMail
+    //   .send(mailOptions)
+    //   .then(() => {
+    //     console.log("Email sent successfully!!!!!");
+    //   })
+    //   .catch((error) => {
+    //     console.error("error:", error);
+    //   });
 
-    // async function main() {
-    //   const result = await transporter.sendMail(
-    //     mailOptions,
-    //     function (err, info) {
-    //       if (err) {
-    //         console.log("err1111", err);
-    //       } else {
-    //         console.log("info", info);
-    //       }
-    //     }
-    //   );
-    //   console.log("Email sent successfully!", { result });
-    // }
-    // main();
+    async function main() {
+      const result = await transporter.sendMail(
+        mailOptions,
+        function (err, info) {
+          if (err) {
+            console.log("err1111", err);
+          } else {
+            console.log("info", info);
+          }
+        }
+      );
+      console.log("Email sent successfully!", { result });
+    }
+    main();
   } catch (err) {
     console.log(err);
   }
