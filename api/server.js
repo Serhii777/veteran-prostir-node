@@ -29,8 +29,10 @@ const app = express();
 global.__basedir = __dirname;
 
 const corsOptions = {
-  origin: "http://localhost:3000",
-  origin: "https://veteran-prostir-vn.netlify.app",
+  // origin: "http://localhost:3000",
+  // origin: "https://veteran-prostir-vn.netlify.app",
+  origin: process.env.SITE_DOMAIN_LOCAL,
+  origin: process.env.SITE_DOMAIN,
 };
 
 // const host = process.env.HOST;
