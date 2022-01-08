@@ -28,13 +28,14 @@ const initDatabase = require("./helpers/initDatabase");
 const app = express();
 global.__basedir = __dirname;
 
-console.log('process.env.SITE_DOMAIN_LOCAL:', process.env.SITE_DOMAIN_LOCAL);
+// console.log("process.env.SITE_DOMAIN_LOCAL:", process.env.SITE_DOMAIN_LOCAL);
+// console.log("process.env.SITE_DOMAIN:", `${process.env.SITE_DOMAIN}`);
 
 const corsOptions = {
   // origin: "http://localhost:3000",
   // origin: "https://veteran-prostir-vn.netlify.app",
-  origin: process.env.SITE_DOMAIN_LOCAL,
-  origin: process.env.SITE_DOMAIN,
+  origin: `${process.env.SITE_DOMAIN_LOCAL}`,
+  origin: `${process.env.SITE_DOMAIN}`,
 };
 
 // const host = process.env.HOST;
