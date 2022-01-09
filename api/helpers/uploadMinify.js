@@ -13,9 +13,14 @@ const { extendDefaultPlugins } = require("svgo");
 // const { v4: uuidv4 } = require("uuid");
 // global.__basedir = __dirname;
 
+// require("dotenv").config({ path: path.join(__dirname, ".env") });
+require("dotenv");
+
+
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, path.resolve("./tmp"));
+    // cb(null, path.resolve("./tmp"));
+    cb(null, path.resolve(`./${process.env.TMP_DIR}`));
   },
   filename: (req, file, cb) => {
     const name = file.originalname
@@ -52,11 +57,6 @@ const uploadFile = multer({
   limits: { fileSize: maxSize },
 }).single("image");
 
-const uploadFiles = multer({
-  storage: storage,
-  limits: { fileSize: maxSize },
-}).array("images", 10);
-
 // Для зжимання картинок
 const minifyImage = async (req, res, next) => {
   try {
@@ -66,10 +66,12 @@ const minifyImage = async (req, res, next) => {
     console.log("filename111111: ", filename);
     console.log("tmpPath111111: ", tmpPath);
 
-    const MINIFY_DIR = "public/images";
+    // const MINIFY_DIR = "public/images";
+    // process.env.MINIFY_DIR
+    console.log('process.env.MINIFY_DIR:', process.env.MINIFY_DIR);
 
     await imagemin([tmpPath.replace(/\\/g, "/")], {
-      destination: MINIFY_DIR,
+      destination: process.env.MINIFY_DIR,
       plugins: [
         imageminMozjpeg({
           quality: 70,
@@ -102,8 +104,8 @@ const minifyImage = async (req, res, next) => {
 
     req.file = {
       ...req.file,
-      photoURL: path.join(MINIFY_DIR, filename).replace(/\\/g, "/"),
-      destination: MINIFY_DIR,
+      photoURL: path.join(process.env.MINIFY_DIR, filename).replace(/\\/g, "/"),
+      destination: process.env.MINIFY_DIR,
     };
 
     console.log("req.file222222: ", req.file);
@@ -118,6 +120,6 @@ const minifyImage = async (req, res, next) => {
 module.exports = {
   imageFilter,
   uploadFile,
-  uploadFiles,
+  // uploadFiles,
   minifyImage,
 };

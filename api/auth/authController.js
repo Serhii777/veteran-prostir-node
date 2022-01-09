@@ -12,8 +12,7 @@ const nodemailer = require("nodemailer");
 const { UnauthorizedError } = require("../errors/errors");
 
 const listAccessEmail = [
-  process.env.ACCESS_EMAIL_MSV1,
-  process.env.ACCESS_EMAIL_MSV2,
+  process.env.ACCESS_EMAIL_MSV,
   process.env.ACCESS_EMAIL_VP,
   process.env.ACCESS_EMAIL_KOF,
   process.env.ACCESS_EMAIL_VPM,
@@ -207,9 +206,8 @@ const sendVerificationEmail = async (useradmin) => {
     });
 
     const mailOptions = {
-      from: process.env.NODEMAILER_USER, // "sender@email.com" - sender address // от кого
-      to: useradmin.email, // "to@email.com" - list of receivers // кому
-      // to: ["serhii.muzyka2918@gmail.com", "serhiimuzyka29@gmail./com", "muzykasv72@gmail.com", "veteransspace01@gmail.com"], // "to@email.com" - list of receivers // кому
+      from: process.env.NODEMAILER_USER, // от кого
+      to: useradmin.email, // кому
       subject: "Підтвердження Вашої електронної пошти", // Subject line
       text: "Будь-ласка, підтвердіть Вашу електронну пошту",
       html: `<div><h2>Привіт друже!</h2><h3>Ласкаво просимо до адміністративної частини сайту.</h3><p>Ви можете підтвердити Вашу електронну пошту за посиланням: <a href='${process.env.SITE_DOMAIN_HEROKU}auth/verify/${verificationToken}'>Натисніть тут</a> 👍 !!!</p></div>`,

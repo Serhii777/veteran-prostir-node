@@ -4,7 +4,7 @@ const uploadImagesRouter = express.Router();
 const {
   // imageFilter,
   uploadFile,
-  uploadFiles,
+  // uploadFiles,
   minifyImage,
   
 } = require("../helpers/uploadMinify");
@@ -12,7 +12,7 @@ const {
   getImages,
   // imageFilter,
   uploadImage,
-  uploadImages,
+  // uploadImages,
   deleteImageById,
 } = require("./uploadImagesController");
 const { asyncWrapper } = require("../helpers/asyncWrapper");
@@ -30,7 +30,7 @@ uploadImagesRouter.post(
 );
 
 //* POST http://localhost:4001/images/uploads
-uploadImagesRouter.post("/uploads", uploadFiles, asyncWrapper(uploadImages));
+// uploadImagesRouter.post("/uploads", uploadFiles, asyncWrapper(uploadImages));
 
 uploadImagesRouter.delete("/:id", asyncWrapper(deleteImageById));
 
