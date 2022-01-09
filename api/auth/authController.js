@@ -34,13 +34,18 @@ const signUp = async (req, res, next) => {
 
   const passwordHash = await bcryptjs.hash(password, 6);
 
-  const allowEmail = listAccessEmail.filter(
-    (item) => (console.log("item:", item), item === req.body.email)
+  console.log("listAccessEmail:", listAccessEmail);
+
+  const allowEmail = listAccessEmail.find(
+    (item) =>
+      // console.log("item:", item);
+      // console.log("req.body.email:", req.body.email);
+      item === req.body.email
   );
 
-  console.log("allowEmail11111:", allowEmail[0]);
+  console.log("allowEmail11111:", allowEmail);
 
-  if (!allowEmail[0]) {
+  if (!allowEmail) {
     throw new UnauthorizedError(
       `Користувач з електронною поштою: ${email} не має допуску до адміністративної частини сайту!`
     );
@@ -190,8 +195,8 @@ const sendVerificationEmail = async (useradmin) => {
 
     const transporter = nodemailer.createTransport({
       service: "gmail",
-    // host: "smtp.ethereal.email",
-    // port: 587,
+      // host: "smtp.ethereal.email",
+      // port: 587,
       auth: {
         user: process.env.NODEMAILER_USER,
         pass: process.env.NODEMAILER_PASS,
@@ -210,7 +215,7 @@ const sendVerificationEmail = async (useradmin) => {
       html: `<div><h2>Привіт друже!</h2><h3>Ласкаво просимо до адміністративної частини сайту.</h3><p>Ви можете підтвердити Вашу електронну пошту за посиланням: <a href='${process.env.SITE_DOMAIN_HEROKU}auth/verify/${verificationToken}'>Натисніть тут</a> 👍 !!!</p></div>`,
     };
 
-    console.log('mailOptions:', mailOptions);
+    console.log("mailOptions:", mailOptions);
 
     // await sgMail.send(mailOptions);
 
