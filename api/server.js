@@ -36,7 +36,9 @@ const corsOptions = {
   // origin: "https://veteran-prostir-vn.netlify.app",
   // origin: `${process.env.SITE_DOMAIN_LOCAL}`,
   // origin: `${process.env.SITE_DOMAIN}`,
-  origin: process.env.PORT,
+  origin: process.env.SITE_DOMAIN_LOCAL,
+  origin: process.env.SITE_DOMAIN,
+  // origin: process.env.PORT,
 };
 
 // const host = process.env.HOST;
