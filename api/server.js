@@ -32,11 +32,11 @@ global.__basedir = __dirname;
 // console.log("process.env.SITE_DOMAIN:", `${process.env.SITE_DOMAIN}`);
 
 const corsOptions = {
-  origin: "http://localhost:3000",
+  // origin: "http://localhost:3000",
   // origin: "https://veteran-prostir-vn.netlify.app",
   // origin: `${process.env.SITE_DOMAIN_LOCAL}`,
   // origin: `${process.env.SITE_DOMAIN}`,
-  // origin: process.env.SITE_DOMAIN_LOCAL,
+  origin: process.env.SITE_DOMAIN_LOCAL,
   // origin: process.env.SITE_DOMAIN,
   // origin: process.env.PORT,
 };
@@ -45,7 +45,7 @@ const corsOptions = {
 const PORT = process.env.PORT || 4001;
 // const PORT = process.env.PORT || 3000;
 app.use(express.json());
-// app.use(cors(corsOptions));
+app.use(cors(corsOptions));
 app.use(express.urlencoded({ extended: true }));
 
 app.use(express.static("./public"));

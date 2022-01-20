@@ -16,6 +16,7 @@ const listAccessEmail = [
   process.env.ACCESS_EMAIL_VP,
   process.env.ACCESS_EMAIL_KOF,
   process.env.ACCESS_EMAIL_VPM,
+  process.env.ACCESS_EMAIL_ADMIN,
 ];
 
 //! Registration ================================
@@ -93,6 +94,8 @@ const signIn = async (req, res, next) => {
       // return res.status(400).send({message: `Користувача з емейлом ${email} не існує. Щоб отримати доступ до адміністрування сайту, вам потрібно зареєструватися.`})
     } else {
       const useradmin = await useradminModel.findUserByEmail(email);
+
+      console.log('useradminSignIn:', useradmin);
 
       return res.status(200).json({
         token,
